@@ -17,15 +17,15 @@ static NSString * const kRecipeCellIdentifier = @"recipeCell";
     return self;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.recipes count];
-}
-
 - (void)viewDidLoad
 {
     [self.tableView registerClass:[UITableViewCell class]
            forCellReuseIdentifier:kRecipeCellIdentifier];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.recipes count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
