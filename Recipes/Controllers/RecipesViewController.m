@@ -1,4 +1,6 @@
 #import "RecipesViewController.h"
+#import "Recipe.h"
+#import "RecipeDetailViewController.h"
 
 static NSString * const kRecipeCellIdentifier = @"recipeCell";
 
@@ -12,7 +14,11 @@ static NSString * const kRecipeCellIdentifier = @"recipeCell";
 {
     self = [super init];
     if (self) {
-        self.recipes = @[ @"Guacamole", @"Tacos", @"Steak" ];
+        self.recipes = @[
+                         [Recipe recipeWithName:@"Guacamole"],
+                         [Recipe recipeWithName:@"Tacos"],
+                         [Recipe recipeWithName:@"Steak"]
+                         ];
     }
     return self;
 }
@@ -23,6 +29,17 @@ static NSString * const kRecipeCellIdentifier = @"recipeCell";
            forCellReuseIdentifier:kRecipeCellIdentifier];
 }
 
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    RecipeDetailViewController *detailController = [[RecipeDetailViewController alloc] init];
+    [self.navigationController pushViewController:detailController
+                                         animated:YES];
+}
+
+#pragma mark - UITableViewDataSource
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.recipes count];
@@ -31,7 +48,7 @@ static NSString * const kRecipeCellIdentifier = @"recipeCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kRecipeCellIdentifier];
-    cell.textLabel.text = self.recipes[indexPath.row];
+    cell.textLabel.text = [self.recipes[indexPath.row] name];
     return cell;
 }
 

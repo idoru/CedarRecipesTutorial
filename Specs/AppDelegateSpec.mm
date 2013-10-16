@@ -18,8 +18,12 @@ describe(@"AppDelegate", ^{
             [delegate application:nil didFinishLaunchingWithOptions:nil];
         });
 
-        it(@"should set up a window with RecipesViewController at the root", ^{
-            delegate.window.rootViewController should be_instance_of([RecipesViewController class]);
+        it(@"should set up a window with a UINavigationController at the root", ^{
+            delegate.window.rootViewController should be_instance_of([UINavigationController class]);
+        });
+
+        it(@"should put a RecipesViewController on the top of the navigation stack", ^{
+            [(UINavigationController *)delegate.window.rootViewController topViewController] should be_instance_of([RecipesViewController class]);
         });
     });
 });
