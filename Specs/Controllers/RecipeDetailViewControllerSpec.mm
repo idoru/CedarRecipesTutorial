@@ -20,6 +20,39 @@ describe(@"RecipeDetailViewController", ^{
         controller.view should_not be_nil;
     });
 
+    it(@"should place the edit button in the navigation item", ^{
+        controller.navigationItem.rightBarButtonItem should be_same_instance_as(controller.editButtonItem);
+    });
+
+    describe(@"-setEditing:animated:", ^{
+        context(@"when editing is YES", ^{
+            beforeEach(^{
+                spy_on(controller.recipeNameTextField);
+                [controller setEditing:YES animated:NO];
+            });
+
+            it(@"should make the text fields editable", ^{
+                controller.ingredientsTextView.editable should be_truthy;
+                controller.instructionsTextView.editable should be_truthy;
+            });
+
+            it(@"should hide the recipe name label and show the text field", ^{
+                controller.recipeNameLabel.hidden should be_truthy;
+                controller.recipeNameTextField.hidden should_not be_truthy;
+            });
+
+            it(@"should try to make the recipe name text field the first responder", ^{
+                controller.recipeNameTextField should have_received(@selector(becomeFirstResponder));
+            });
+        });
+
+        context(@"when editing is NO", ^{
+            beforeEach(^{
+                [controller setEditing:NO animated:NO];
+            });
+        });
+    });
+
     describe(@"when the view is about to appear", ^{
         beforeEach(^{
             [controller viewWillAppear:NO];

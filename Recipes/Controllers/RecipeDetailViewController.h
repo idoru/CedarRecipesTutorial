@@ -6,6 +6,7 @@
 @property (weak, nonatomic, readonly) IBOutlet UITextView *ingredientsTextView;
 @property (weak, nonatomic, readonly) IBOutlet UITextView *instructionsTextView;
 @property (weak, nonatomic, readonly) IBOutlet UILabel *recipeNameLabel;
+@property (weak, nonatomic, readonly) IBOutlet UITextField *recipeNameTextField;
 
 - (instancetype)initWithRecipe:(Recipe *)recipe;
 
