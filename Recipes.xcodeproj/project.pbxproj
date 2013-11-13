@@ -27,7 +27,8 @@
 		22283C9417E0D95B0016DB81 /* RecipesViewControllerSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 22283C9317E0D95B0016DB81 /* RecipesViewControllerSpec.mm */; };
 		22708A5C180EFBDD00765E21 /* Recipe.m in Sources */ = {isa = PBXBuildFile; fileRef = 22708A5B180EFBDD00765E21 /* Recipe.m */; };
 		22708A60180EFE1500765E21 /* RecipeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22708A5E180EFE1500765E21 /* RecipeDetailViewController.m */; };
-		22708A61180EFE1500765E21 /* RecipeDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22708A5F180EFE1500765E21 /* RecipeDetailViewController.xib */; };
+		22708A61180EFE1500765E21 /* RecipeDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22708A5F180EFE1500765E21 /* RecipeDetailView.xib */; };
+		22D975A51821751D00E38F26 /* RecipeDetailViewControllerSpec.mm in Sources */ = {isa = PBXBuildFile; fileRef = 22D975A41821751D00E38F26 /* RecipeDetailViewControllerSpec.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,7 +70,8 @@
 		22708A5B180EFBDD00765E21 /* Recipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Recipe.m; sourceTree = "<group>"; };
 		22708A5D180EFE1500765E21 /* RecipeDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecipeDetailViewController.h; sourceTree = "<group>"; };
 		22708A5E180EFE1500765E21 /* RecipeDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecipeDetailViewController.m; sourceTree = "<group>"; };
-		22708A5F180EFE1500765E21 /* RecipeDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecipeDetailViewController.xib; sourceTree = "<group>"; };
+		22708A5F180EFE1500765E21 /* RecipeDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecipeDetailView.xib; sourceTree = "<group>"; };
+		22D975A41821751D00E38F26 /* RecipeDetailViewControllerSpec.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RecipeDetailViewControllerSpec.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,7 +185,7 @@
 				2213EF9617CE69ED0000E167 /* RecipesViewController.m */,
 				22708A5D180EFE1500765E21 /* RecipeDetailViewController.h */,
 				22708A5E180EFE1500765E21 /* RecipeDetailViewController.m */,
-				22708A5F180EFE1500765E21 /* RecipeDetailViewController.xib */,
+				22708A5F180EFE1500765E21 /* RecipeDetailView.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				22283C9317E0D95B0016DB81 /* RecipesViewControllerSpec.mm */,
+				22D975A41821751D00E38F26 /* RecipeDetailViewControllerSpec.mm */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -277,7 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2213EF6417CE60E60000E167 /* InfoPlist.strings in Resources */,
-				22708A61180EFE1500765E21 /* RecipeDetailViewController.xib in Resources */,
+				22708A61180EFE1500765E21 /* RecipeDetailView.xib in Resources */,
 				2213EF6C17CE60E60000E167 /* Default.png in Resources */,
 				2213EF6E17CE60E70000E167 /* Default@2x.png in Resources */,
 				2213EF7017CE60E70000E167 /* Default-568h@2x.png in Resources */,
@@ -329,6 +332,7 @@
 			files = (
 				2213EF9117CE667E0000E167 /* AppDelegateSpec.mm in Sources */,
 				22283C9417E0D95B0016DB81 /* RecipesViewControllerSpec.mm in Sources */,
+				22D975A51821751D00E38F26 /* RecipeDetailViewControllerSpec.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

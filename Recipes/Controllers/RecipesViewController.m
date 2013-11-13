@@ -33,7 +33,8 @@ static NSString * const kRecipeCellIdentifier = @"recipeCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    RecipeDetailViewController *detailController = [[RecipeDetailViewController alloc] init];
+    Recipe *recipe = self.recipes[indexPath.row];
+    RecipeDetailViewController *detailController = [[RecipeDetailViewController alloc] initWithRecipe:recipe];
     [self.navigationController pushViewController:detailController
                                          animated:YES];
 }
