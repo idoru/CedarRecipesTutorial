@@ -24,6 +24,17 @@ describe(@"RecipeDetailViewController", ^{
         controller.navigationItem.rightBarButtonItem should be_same_instance_as(controller.editButtonItem);
     });
 
+    describe(@"when the view is laid out", ^{
+        beforeEach(^{
+            controller.view.frame = CGRectMake(0, 0, 320.f, 480.f);
+            [controller viewDidLayoutSubviews];
+        });
+
+        it(@"should set the contentSize of the scrollview to the view's size", ^{
+            controller.scrollView.contentSize should equal(controller.view.frame.size);
+        });
+    });
+
     describe(@"-setEditing:animated:", ^{
         context(@"when editing is YES", ^{
             beforeEach(^{
@@ -53,6 +64,35 @@ describe(@"RecipeDetailViewController", ^{
         });
     });
 
+    describe(@"-keyboardDidShow", ^{
+        beforeEach(^{
+            [controller keyboardDidShow];
+        });
+
+        it(@"should adjust the content inset of the scroll view to accomodate the keyboard", ^{
+            controller.scrollView.contentInset should equal(UIEdgeInsetsMake(0, 0, 216.f, 0));
+        });
+
+        it(@"should adjust the scroll indicator inset of the scroll view to accomodate the keyboard", ^{
+            controller.scrollView.scrollIndicatorInsets should equal(UIEdgeInsetsMake(0, 0, 216.f, 0.f));
+        });
+    });
+
+    describe(@"-keyboardDidHide", ^{
+        beforeEach(^{
+            [controller keyboardDidShow];
+            [controller keyboardDidHide];
+        });
+
+        it(@"should reset the content insets of the scrollview", ^{
+            controller.scrollView.contentInset should equal(UIEdgeInsetsZero);
+        });
+
+        it(@"should reset the scroll indicator insets of the scrollview", ^{
+            controller.scrollView.scrollIndicatorInsets should equal(UIEdgeInsetsZero);
+        });
+    });
+
     describe(@"when the view is about to appear", ^{
         beforeEach(^{
             [controller viewWillAppear:NO];
@@ -68,6 +108,37 @@ describe(@"RecipeDetailViewController", ^{
 
         it(@"should set the instructions on the instructionsTextView", ^{
             controller.instructionsTextView.text should equal(recipe.instructions);
+        });
+    });
+
+    describe(@"when the view appears", ^{
+        __block NSNotificationCenter *notificationCenter;
+        beforeEach(^{
+            notificationCenter = [NSNotificationCenter defaultCenter];
+            spy_on(notificationCenter);
+            [controller viewWillAppear:NO];
+            [controller viewDidAppear:NO];
+        });
+
+        it(@"should register for keyboard events", ^{
+            notificationCenter should have_received(@selector(addObserver:selector:name:object:)).with(controller, @selector(keyboardDidShow), UIKeyboardDidShowNotification, nil);
+            notificationCenter should have_received(@selector(addObserver:selector:name:object:)).with(controller, @selector(keyboardDidHide), UIKeyboardDidHideNotification, nil);
+        });
+    });
+
+    describe(@"when the view disappers", ^{
+        __block NSNotificationCenter *notificationCenter;
+
+        beforeEach(^{
+            notificationCenter = [NSNotificationCenter defaultCenter];
+            spy_on(notificationCenter);
+            [controller viewWillDisappear:NO];
+            [controller viewDidDisappear:NO];
+        });
+
+        it(@"should de-register for keyboard events", ^{
+            notificationCenter should have_received(@selector(removeObserver:name:object:)).with(controller, UIKeyboardDidShowNotification, nil);
+            notificationCenter should have_received(@selector(removeObserver:name:object:)).with(controller, UIKeyboardDidHideNotification, nil);
         });
     });
 });
