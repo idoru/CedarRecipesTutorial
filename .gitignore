@@ -1,0 +1,22 @@
+# OS X temp files
+.DS_Store
+
+# Build temp files
+DerivedData/
+build/
+
+# Xcode files
+*.pbxuser
+*.perspective
+*.mode1v3
+*.mode2v3
+UserInterfaceState.xcuserstate
+Breakpoints.xcbkptlist
+xcuserdata
+
+# Whitelist default settings (see http://stackoverflow.com/questions/49478/git-ignore-file-for-xcode-projects)
+!default.pbxuser
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+
