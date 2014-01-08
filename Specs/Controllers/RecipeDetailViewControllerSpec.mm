@@ -18,20 +18,38 @@ describe(@"RecipeDetailViewController", ^{
         controller = [[[RecipeDetailViewController alloc] initWithRecipe:recipe] autorelease];
 
         controller.view should_not be_nil;
+        UIWindow *window = [[UIWindow alloc] init];
+        [window addSubview:controller.view];
+        [window makeKeyAndVisible];
     });
 
     it(@"should place the edit button in the navigation item", ^{
         controller.navigationItem.rightBarButtonItem should be_same_instance_as(controller.editButtonItem);
     });
 
+    describe(@"keyboardEditingAccessory", ^{
+        it(@"should be a UIToolbar", ^{
+            controller.keyboardEditingAccessory should be_instance_of([UIToolbar class]);
+        });
+
+        it(@"should have a previous button", ^{
+            UIBarButtonItem *previousButton = controller.keyboardEditingAccessory.items.firstObject;
+            previousButton.title should equal(@"Previous");
+        });
+
+        it(@"should have a next button", ^{
+            UIBarButtonItem *nextButton = controller.keyboardEditingAccessory.items.lastObject;
+            nextButton.title should equal(@"Next");
+        });
+    });
+
     describe(@"when the view is laid out", ^{
         beforeEach(^{
-            controller.view.frame = CGRectMake(0, 0, 320.f, 480.f);
             [controller viewDidLayoutSubviews];
         });
 
-        it(@"should set the contentSize of the scrollview to the view's size", ^{
-            controller.scrollView.contentSize should equal(controller.view.frame.size);
+        it(@"should set the contentSize of the scrollview to the size of the scroll view's frame", ^{
+            controller.scrollView.contentSize should equal(controller.scrollView.frame.size);
         });
     });
 
@@ -55,6 +73,96 @@ describe(@"RecipeDetailViewController", ^{
             it(@"should try to make the recipe name text field the first responder", ^{
                 controller.recipeNameTextField should have_received(@selector(becomeFirstResponder));
             });
+
+            context(@"when the recipe name is focused", ^{
+                beforeEach(^{
+                    [controller.recipeNameTextField becomeFirstResponder];
+                });
+
+                describe(@"tapping the next button", ^{
+                    beforeEach(^{
+                        controller.recipeNameTextField.isFirstResponder should be_truthy;
+                        UIBarButtonItem *nextButton = controller.keyboardEditingAccessory.items.lastObject;
+                        [nextButton.target performSelector:nextButton.action withObject:nextButton];
+                    });
+
+                    it(@"should make the ingredients field become first responder", ^{
+                        controller.ingredientsTextView.isFirstResponder should be_truthy;
+                    });
+                });
+
+                describe(@"tapping the previous button", ^{
+                    beforeEach(^{
+                        controller.recipeNameTextField.isFirstResponder should be_truthy;
+                        UIBarButtonItem *previousButton = controller.keyboardEditingAccessory.items.firstObject;
+                        [previousButton.target performSelector:previousButton.action withObject:previousButton];
+                    });
+
+                    it(@"should make the ingredients field become first responder", ^{
+                        controller.instructionsTextView.isFirstResponder should be_truthy;
+                    });
+                });
+            });
+
+            context(@"when the ingredients field is focused", ^{
+                beforeEach(^{
+                    [controller.ingredientsTextView becomeFirstResponder];
+                });
+
+                describe(@"tapping the next button", ^{
+                    beforeEach(^{
+                        controller.ingredientsTextView.isFirstResponder should be_truthy;
+                        UIBarButtonItem *nextButton = controller.keyboardEditingAccessory.items.lastObject;
+                        [nextButton.target performSelector:nextButton.action withObject:nextButton];
+                    });
+
+                    it(@"should make the instructions field become first responder", ^{
+                        controller.instructionsTextView.isFirstResponder should be_truthy;
+                    });
+                });
+
+                describe(@"tapping the previous button", ^{
+                    beforeEach(^{
+                        controller.ingredientsTextView.isFirstResponder should be_truthy;
+                        UIBarButtonItem *previousButton = controller.keyboardEditingAccessory.items.firstObject;
+                        [previousButton.target performSelector:previousButton.action withObject:previousButton];
+                    });
+
+                    it(@"should make the recipe name field become first responder", ^{
+                        controller.recipeNameTextField.isFirstResponder should be_truthy;
+                    });
+                });
+            });
+
+            context(@"when the instructions field is focused", ^{
+                beforeEach(^{
+                    [controller.instructionsTextView becomeFirstResponder];
+                });
+
+                describe(@"tapping the next button", ^{
+                    beforeEach(^{
+                        controller.instructionsTextView.isFirstResponder should be_truthy;
+                        UIBarButtonItem *nextButton = controller.keyboardEditingAccessory.items.lastObject;
+                        [nextButton.target performSelector:nextButton.action withObject:nextButton];
+                    });
+
+                    it(@"should make the recipe name field become first responder", ^{
+                        controller.recipeNameTextField.isFirstResponder should be_truthy;
+                    });
+                });
+
+                describe(@"tapping the previous button", ^{
+                    beforeEach(^{
+                        controller.instructionsTextView.isFirstResponder should be_truthy;
+                        UIBarButtonItem *previousButton = controller.keyboardEditingAccessory.items.firstObject;
+                        [previousButton.target performSelector:previousButton.action withObject:previousButton];
+                    });
+
+                    it(@"should make the ingredients field become first responder", ^{
+                        controller.ingredientsTextView.isFirstResponder should be_truthy;
+                    });
+                });
+            });
         });
 
         context(@"when editing is NO", ^{
@@ -69,12 +177,8 @@ describe(@"RecipeDetailViewController", ^{
             [controller keyboardDidShow];
         });
 
-        it(@"should adjust the content inset of the scroll view to accomodate the keyboard", ^{
-            controller.scrollView.contentInset should equal(UIEdgeInsetsMake(0, 0, 216.f, 0));
-        });
-
-        it(@"should adjust the scroll indicator inset of the scroll view to accomodate the keyboard", ^{
-            controller.scrollView.scrollIndicatorInsets should equal(UIEdgeInsetsMake(0, 0, 216.f, 0.f));
+        it(@"should adjust the content inset of the scroll view to accomodate the keyboard and navigation bar", ^{
+            controller.scrollView.contentInset should equal(UIEdgeInsetsMake(64.0f, 0, 260.f, 0));
         });
     });
 
@@ -123,6 +227,12 @@ describe(@"RecipeDetailViewController", ^{
         it(@"should register for keyboard events", ^{
             notificationCenter should have_received(@selector(addObserver:selector:name:object:)).with(controller, @selector(keyboardDidShow), UIKeyboardDidShowNotification, nil);
             notificationCenter should have_received(@selector(addObserver:selector:name:object:)).with(controller, @selector(keyboardDidHide), UIKeyboardDidHideNotification, nil);
+        });
+
+        it(@"should use the keyboardEditingAccessory on all text fields", ^{
+            controller.ingredientsTextView.inputAccessoryView should be_same_instance_as(controller.keyboardEditingAccessory);
+            controller.instructionsTextView.inputAccessoryView should be_same_instance_as(controller.keyboardEditingAccessory);
+            controller.recipeNameTextField.inputAccessoryView should be_same_instance_as(controller.keyboardEditingAccessory);
         });
     });
 
