@@ -14,7 +14,7 @@ describe(@"RecipeDetailViewController", ^{
         recipe = [[[Recipe alloc] init] autorelease];
         recipe.name = @"Lasagne";
         recipe.ingredients = @"Cheese, Pasta, Mincemeat, Tomato Paste";
-        recipe.instructions = @"Mix stuff and put in between pasta.  Heat until yummy.";
+        recipe.instructions = @"Mix stuff and put in between pasta. Heat until yummy.";
         controller = [[[RecipeDetailViewController alloc] initWithRecipe:recipe] autorelease];
 
         controller.view should_not be_nil;
@@ -43,20 +43,11 @@ describe(@"RecipeDetailViewController", ^{
         });
     });
 
-    describe(@"when the view is laid out", ^{
-        beforeEach(^{
-            [controller viewDidLayoutSubviews];
-        });
-
-        it(@"should set the contentSize of the scrollview to the size of the scroll view's frame", ^{
-            controller.scrollView.contentSize should equal(controller.scrollView.frame.size);
-        });
-    });
-
     describe(@"-setEditing:animated:", ^{
         context(@"when editing is YES", ^{
             beforeEach(^{
                 spy_on(controller.recipeNameTextField);
+                spy_on(controller.view);
                 [controller setEditing:YES animated:NO];
             });
 
@@ -72,6 +63,10 @@ describe(@"RecipeDetailViewController", ^{
 
             it(@"should try to make the recipe name text field the first responder", ^{
                 controller.recipeNameTextField should have_received(@selector(becomeFirstResponder));
+            });
+
+            it(@"should not tell the view editing has ended", ^{
+                controller.view should_not have_received(@selector(endEditing:));
             });
 
             context(@"when the recipe name is focused", ^{
@@ -167,8 +162,42 @@ describe(@"RecipeDetailViewController", ^{
 
         context(@"when editing is NO", ^{
             beforeEach(^{
+                spy_on(controller.view);
+                spy_on(controller.recipeNameTextField);
                 [controller setEditing:NO animated:NO];
             });
+
+            it(@"should tell the view that editing has ended", ^{
+                controller.view should have_received(@selector(endEditing:)).with(NO);
+            });
+
+            it(@"should not tell the recipe text field to become first responder", ^{
+                controller.recipeNameTextField should_not have_received(@selector(becomeFirstResponder));
+            });
+        });
+    });
+
+    describe(@"updating the recipe's properties", ^{
+        beforeEach(^{
+            [controller setEditing:YES];
+            controller.recipeNameTextField.text = @"Lasagna - correct";
+            [controller setEditing:NO];
+        });
+
+        it(@"should hide the recipe's name text edit field", ^{
+            controller.recipeNameTextField.isHidden should be_truthy;
+        });
+
+        it(@"should unhide the recipe's name label", ^{
+            controller.recipeNameLabel.isHidden should_not be_truthy;
+        });
+
+        it(@"should update the recipe's name with the new recipe name", ^{
+            controller.recipeNameLabel.text should equal(@"Lasagna - correct");
+        });
+
+        it(@"should update the recipe's name on the model", ^{
+            recipe.name should equal(@"Lasagna - correct");
         });
     });
 
@@ -189,11 +218,11 @@ describe(@"RecipeDetailViewController", ^{
         });
 
         it(@"should reset the content insets of the scrollview", ^{
-            controller.scrollView.contentInset should equal(UIEdgeInsetsZero);
+            controller.scrollView.contentInset should equal(UIEdgeInsetsMake(64.0f, 0, 0, 0));
         });
 
         it(@"should reset the scroll indicator insets of the scrollview", ^{
-            controller.scrollView.scrollIndicatorInsets should equal(UIEdgeInsetsZero);
+            controller.scrollView.scrollIndicatorInsets should equal(UIEdgeInsetsMake(64.0f, 0, 0, 0));
         });
     });
 
@@ -202,8 +231,12 @@ describe(@"RecipeDetailViewController", ^{
             [controller viewWillAppear:NO];
         });
 
-        it(@"should set the name of the recipe on the recipeNameLabel", ^{
+        it(@"should set the name of the recipe name on the recipeNameLabel", ^{
             controller.recipeNameLabel.text should equal(recipe.name);
+        });
+
+        it(@"should set the name of the recipe name on the recipeTextField", ^{
+            controller.recipeNameTextField.text should equal(recipe.name);
         });
 
         it(@"should set the ingredients list on the ingredientsTextView", ^{

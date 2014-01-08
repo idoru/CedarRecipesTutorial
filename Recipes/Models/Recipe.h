@@ -4,6 +4,6 @@
 
 @property (strong, nonatomic) NSString *name, *ingredients, *instructions;
 
-
 + (Recipe *)recipeWithName:(NSString *)recipeName;
+
 @end

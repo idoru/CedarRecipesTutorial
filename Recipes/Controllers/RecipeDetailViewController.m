@@ -31,6 +31,7 @@
 {
     [super viewWillAppear:animated];
     self.recipeNameLabel.text = self.recipe.name;
+    self.recipeNameTextField.text = self.recipe.name;
     self.ingredientsTextView.text = self.recipe.ingredients;
     self.instructionsTextView.text = self.recipe.instructions;
 }
@@ -38,10 +39,18 @@
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated
 {
     [super setEditing:editing animated:animated];
+    if (!editing) {
+        self.recipeNameTextField.hidden = YES;
+        self.recipeNameLabel.text = self.recipeNameTextField.text;
+        self.recipeNameLabel.hidden = NO;
+        self.recipe.name = self.recipeNameTextField.text;
+        [self.view endEditing:NO];
+    } else {
+        self.recipeNameLabel.hidden = YES;
+        self.recipeNameTextField.hidden = NO;
+        [self.recipeNameTextField becomeFirstResponder];
+    }
     self.ingredientsTextView.editable = self.instructionsTextView.editable = YES;
-    self.recipeNameTextField.hidden = NO;
-    self.recipeNameLabel.hidden = YES;
-    [self.recipeNameTextField becomeFirstResponder];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,16 +67,12 @@
 - (void)keyboardDidShow
 {
     self.scrollView.contentInset = self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(64.0f, 0, 260.f, 0);
-}
-
-- (void)viewDidLayoutSubviews
-{
     self.scrollView.contentSize = CGSizeMake(320.0f, 443.0f);
 }
 
 - (void)keyboardDidHide
 {
-    self.scrollView.contentInset = self.scrollView.scrollIndicatorInsets = UIEdgeInsetsZero;
+    self.scrollView.contentInset = self.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(64.0f, 0, 0, 0);
 }
 
 - (id)init
